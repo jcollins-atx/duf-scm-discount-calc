@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Drainage Charge Property Preview - City of Austin Watershed Protection Department</title>
+
+<!-- DOCUMENT METADATA -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, minimal-ui, maximum-scale=1.0, user-scalable=no">
+<meta name="renderer-version" content="200821" />
+<link rel="shortcut icon" href="resrcs/img/wpd_logo_fullcolor_vert_graphic_only_small.png" />
+
+<!-- EXTERNAL SCRIPTS -->
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js" integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew==" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/Leaflet.fullscreen.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.2/dist/jquery.validate.min.js"></script>
+
+<!-- BOOTSTRAP -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
+
+<!-- EXTERNAL STYLESHEETS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" />
+<link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v1.0.1/leaflet.fullscreen.css"  />
+
+<!-- LOCAL SCRIPTS -->
+<script src="resrcs/js/core-populate-area-viz.js"></script>
+<script src="resrcs/js/core-populate-tables.js"></script>
+<script src="resrcs/js/jquery-url-parameter.js"></script>
+<script src="resrcs/js/jquery-show-hide-event.js"></script>
+<script src="resrcs/js/sticky-table-headers.js"></script>
+<script src="resrcs/js/leaflet-groupedlayercontrol.js"></script>
+<script src="resrcs/js/leaflet-zoomhome.js"></script>
+<script src="resrcs/js/leaflet-measure/leaflet-measure.js"></script>
+<script src="resrcs/js/class-stormwaterControl.js"></script>
+
+<!-- LOCAL STYLESHEETS -->
+<link rel="stylesheet" href="resrcs/css/core.css">
+<link rel="stylesheet" href="resrcs/css/core-area-viz.css" />
+<link rel="stylesheet" href="resrcs/css/leaflet-groupedlayercontrol.css">
+<link rel="stylesheet" href="resrcs/js/leaflet-measure/leaflet-measure.css">
+
+</head>
+<body>
+
+<div class="modal fade" id="disclaimerModal" tabindex="-1" aria-labelledby="disclaimerModalTitle" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="disclaimerModalTitle">Disclaimer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>The drainage charge(s) and other figures shown by this application are estimates made available by the City of Austin as a service to drainage charge ratepayers. The estimates are subject to change. The map is for visual reference only. The City of Austin makes no warranties, expressed or implied, concerning the accuracy, completeness, reliability, or suitability of the information provided.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<nav class="navbar fixed-top navbar-expand-lg navbar-dark" id="nav-main">
+  <a class="navbar-brand" href="#home">
+    Drainage Charge Property Preview
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+
+      <li class="nav-item">
+        <a class="nav-link view-selector" href="#parcel">Parcel and Charge</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link view-selector" href="#ic">Impervious Cover</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link view-selector" href="#discount">Discount</a>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Links
+        </a>
+        <div class="dropdown-menu" target="_blank" aria-labelledby="navbarDropdown">
+          <a class="dropdown-item" target="_blank" href="https://austintexas.gov/drainagecharge">Drainage Charge homepage</a>
+          <a class="dropdown-item" target="_blank" href="https://austintexas.gov/content/1361/faq/32499">Drainage Charge FAQ</a>
+          <a class="dropdown-item" target="_blank" href="https://austintexas.gov/page/stormwater-management-discount">Stormwater Management Discount</a>
+          <a class="dropdown-item" target="_blank" href="#">Find My Drainage Charge</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" target="_blank" href="https://austintexas.gov/department/watershed-protection">Watershed Protection Department</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item disabled" href="#">Generated <span class="genDate"></span> by <span class="jobOwner"></span><br>Job #<span class="jobNum"></span></a>
+        </div>
+      </li>
+    </ul>
+    <span class="navbar-text">
+    	<img src="resrcs/img/onecolor_white_horiz_w_seal.png" height="30" class="d-inline-block align-top" alt="" loading="lazy">
+    </span>
+  </div>
+</nav>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-lg-12 px-0">
+			<div id="map"></div>
+		</div>
+		<div class="col-lg-5 px-4 view" data-spy="scroll" data-target="#nav-main" data-offset="100">
+			<h1 id="home">Drainage Charge Property Preview</h1>
+			<div class="section rounded p-3">
+				<div class="embed-responsive embed-responsive-16by9" style="display:none">
+					<!--<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/orObqnAw_i8" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>-->
+				</div>
+
+				<ul class="nav nav-pills nav-fill mb-3" id="intro-tabs" role="tablist">
+					<li class="nav-item" role="presentation">
+						<a class="nav-link active" href="#about" id="about-tab" data-toggle="tab" role="tab" aria-controls="about" aria-selected="true">About</a>
+					</li>
+					<li class="nav-item" role="presentation">
+						<a class="nav-link" href="#howto" id="howto-tab" data-toggle="tab" role="tab" aria-controls="howto" aria-selected="false">How to Use</a>
+					</li>
+					<li class="nav-item" role="presentation">
+						<a class="nav-link" href="#info" id="info-tab" data-toggle="tab" role="tab" aria-controls="info" aria-selected="false">More Info</a>
+					</li>
+				</ul>
+
+				<div class="tab-content">
+					<div class="tab-pane active" id="about" role="tabpanel" aria-labelledby="about-tab">
+						<h4>About this Preview</h4>
+						<p class="section-text">
+							This preview shows proposed edits to data used to calculate the drainage charge.
+					        This preview does <b>NOT</b> show any edits to bill allocation, responsibility, or discounts.
+					        Edits may have been performed using more recent aerial imagery than what displayed in this preview.
+					        All figures are estimates and may differ slightly when edits are completed due to calculation differences.
+					        <a href="#" data-toggle="modal" data-target="#disclaimerModal">Disclaimer</a>.
+						</p>
+					</div>
+					<div class="tab-pane" id="howto" role="tabpanel" aria-labelledby="howto-tab">
+						<h4>How to Use this Preview</h4>
+						<p class="section-text">
+					        <b>Review summaries of edits</b><br>
+					        Scroll down or use the menu above to view summaries of parcel totals and estimates and impervious cover features. Click/tap an item to highlight it on the map.
+					        <br><br>
+					        <b>Explore mapped impervious cover</b><br>
+					        Move the map by clicking and dragging/swiping with two fingers. Zoom by scrolling/pinching. Click/tap a feature to view its details.
+					        Currently billing data can also be viewed using the <a href="https://www.austintexas.gov/GIS/DrainageCharge/" target="_blank">Find My Drainage Charge tool</a>.
+					        <span id="how-to-measure">
+						        <br><br>
+						        <b>Measure distances and areas</b><br>
+						        Hover over the measure button <img src="resrcs/js/leaflet-measure/assets/rulers.png" /> and click "Create a new measurement." Add points to the measurement, then double-click or click "Finish Measurement" to show the dimensions.
+					        </span>
+					        <span id="how-to-annotate">
+					            <br><br>
+						        <b>Annotate the map to highlight disputed areas</b><br>
+						        Click the line <i class="icon polyline"></i>, polygon <i class="icon polygon"></i>, or circle marker <i class="icon circle"></i> button to draw an annotation. <span id="how-to-annotate-notes">Enter any helpful notes or labels into the popup.</span> Click the eraser button <i class="icon eraser"></i> to remove annotations. Screenshot annotations to save and share them (Windows: print screen and paste; Mac: command + shift + 4).
+					        </span>
+						</p>
+					</div>
+					<div class="tab-pane" id="info" role="tabpanel" aria-labelledby="info-tab">
+						<h4>More Information</h4>
+						<p class="section-text">
+							<b>Stormwater Management Discount</b><br>
+					        The City offers a Stormwater Management Discount on the drainage charge to customers that install eligble stormwater control measures, such as rainwater harvesting tanks and rain gardens. <a href="http://austintexas.gov/page/stormwater-management-discount" target="_blank">Learn more and apply here</a>.
+					        <br><br>
+					        <b>Billing Credit</b><br>
+					        At the conclusion of an administrative review, you may be eligible to receive a credit for any months you paid a higher drainage charge in error.
+					        <br><br>
+					        <b>Drainage Charge Website</b><br>
+					        Learn more about the drainage charge, impervious cover, and the work your drainage charge supports on the <a href="https://www.austintexas.gov/DrainageCharge/" target="_blank">Watershed Protection Department</a> website.
+					    </p>
+					</div>
+				</div>
+
+			</div>
+
+			<div class="spacer"></div>
+
+
+			<h1 id="parcel">Parcel and Charge</h1>
+
+			<div class="section rounded p-3">
+			    <h4>Proposed Edits and Totals</h4>
+				<p class="section-text">This section summarizes the proposed edits to your property's parcel boundaries and overall impervious cover totals. The monthly drainage charge estimate(s) below do not include any discounts or bill splits among multiple tenants or users.</p>
+				<div class="clearfix mb-2 text-secondary">
+					<div class="float-right"><span id="count-parcels"></span> parcel(s)</div>
+				</div>
+				<div class="collection-parcel"><!-- parcel cards placed here --></div>
+			</div>
+
+			<div class="spacer"></div>
+
+
+			<h1 id="ic">Impervious Cover</h1>
+
+			<div class="section rounded p-3">
+				<h4>Impervious Area Breakdown</h4>
+			    <p class="section-text">This figure shows the relative amount each impervious cover feature contributes the property's total impervious area after any edits. Each segment represents an impervious cover feature. Hover over a segment to reveal more details. Click a segment to select the feature on the map.</p>
+				<div class="area-viz">
+				    <div class="original-ref"><span>Currently billing: <span id="area-viz-total-ic-old"></span> sq. ft.</span> <div class="diff-indicator"><span>Change: <span id="area-viz-total-ic-change"></span></span> sq. ft.</div></div>
+				    <div class="area-viz-label">After edits: <span id="area-viz-total-ic-new"></span> sq. ft.</div>
+				    <div class="area-viz-scale-wrap">
+				        <div class="area-viz-edited-segment-wrapper"><!-- area viz content placed here --></div>
+
+				        <div style="width: 100%;height: 6px;" class="border border-secondary border-top-0 border-bottom-0"></div>
+
+				        <div class="percent-tick-wrap">
+					        <div class="percent-tick first tick-25">25%</div>
+					        <div class="percent-tick tick-50">50%</div>
+					        <div class="percent-tick tick-75">75%</div>
+					        <div class="percent-tick tick-100">100%</div>
+				        </div>
+
+				        <div class="axis-label-wrap">
+					        <div class="axis-label">Percent of new impervious area</div>
+				        </div>
+				    </div>
+				</div>
+
+			    <h4 class="mt-5">Proposed Edits</h4>
+			    <p class="section-text">This section summarizes existing and proposed edits to impervious cover features at your property. Click/tap a title to open more information on a feature.</p>
+			    <div class="clearfix mb-2 text-secondary">
+				    <div class="custom-control custom-switch float-left">
+						<input type="checkbox" class="custom-control-input" id="showNoEdits">
+						<label class="custom-control-label" for="showNoEdits">Show features with no edits</label>
+					</div>
+					<div class="float-right"><span id="count-ic-features"></span> feature(s)</div>
+				</div>
+
+				<div class="collection-ic-generic collection-ic accordion" id="icAccordion"><!-- ic cards placed here --></div>
+				<div class="collection-ic-generic collection-ic-hide"><!-- hidden ic cards placed here --></div>
+
+			</div>
+
+			<div class="spacer"></div>
+
+			<h1 id="discount">Stormwater Management Discount</h1>
+
+			<div class="section rounded p-3">
+				<p class="section-text">Do you collect rain water at your home or business? If so, you may be helping to reduce flooding, erosion and water pollution problems. The Stormwater Management Discount acknowledges your efforts and reduces your drainage charge.</p>
+				<p class="section-text"><b>What’s Eligible for a Discount?</b></p>
+				<ul>
+				    <li>Rainwater harvesting systems (tanks)</li>
+				    <li>Rain gardens</li>
+				    <li>Green roofs</li>
+				    <li>Stormwater ponds</li>
+				</ul>
+				<p class="section-text">Note – To be eligible, these stormwater control measures must be voluntary, i.e, not required for development.</p>
+
+				<h4>Calculator</h4>
+
+				<p class="section-text">
+					You can use this calculator to estimate the Stormwater Management Discount amount with any existing or planned stormwater control measures at your property. <b>Please note</b> that this calculator is provided for the sole purpose of estimating a Stormwater Management Discount and does not constitute the official discount application.
+
+			        <a href="#" data-toggle="modal" data-target="#disclaimerModal">Disclaimer</a>.
+				</p>
+				<br>
+
+			    <div class="form-area"></div>
+
+			    <div class="discount-summary card bg-success text-light">
+
+				    <div class="card-body">
+
+						<h5 class="card-title">Discount Calculator Summary</h5>
+						<p class="card-text estimate-text">The estimated discount is <span class="discount-estimate" id="discount-estimate-amount">$0.00 per month</span></p>
+						<p class="card-text estimate-text">The estimated drainage charge after the discount and any proposed edits is <span class="discount-estimate" id="discount-estimate-charge">$0.00 per month</span></p>
+				    </div>
+
+					<div class="card-footer">
+					    <div class="btn-group dropup" id="new-scm-selector">
+							<a class="btn btn-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" data-display="static" aria-haspopup="true" aria-expanded="false">
+								Add a stormwater control measure
+							</a>
+
+							<div class="dropdown-menu dropdown-menu-lg-right shadow-lg border-dark" aria-labelledby="dropdownMenuLink">
+								<h6 class="dropdown-header">Select type</h6>
+								<a class="dropdown-item" href="#tank">Rainwater tank</a>
+								<a class="dropdown-item" href="#garden">Rainwater garden</a>
+								<a class="dropdown-item" href="#roof">Green roof</a>
+								<a class="dropdown-item" href="#pond">Stormwater pond</a>
+							</div>
+						</div>
+				    </div>
+			    </div>
+			</div>
+
+			<div class="spacer"></div>
+
+			<div class="footer pb-3">
+				Generated <span class="genDate"></span> by <span class="jobOwner"></span> &mdash; Job #<span class="jobNum"></span> &mdash; <a href="#" data-toggle="modal" data-target="#disclaimerModal">Disclaimer</a>
+			</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="resrcs/js/core-init-map.js"></script>
+<script src="resrcs/js/core-scm-calc-funcs.js"></script>
+<script src="resrcs/js/core-support-functions.js"></script>
+<script type="text/javascript">
+
+//populateTables();
+//populateMap(); // map must be after table to place simple ic feature id in popups
+//populateAreaViz();
+//initDiscount();
+$(window).resize(); // init responsive layout
+
+</script>
+<script type="text/javascript" src="resrcs/js/core-populate-map.js"></script>
+<script>
+var timerStart = Date.now(),
+	height = $(window).height(),
+	width = $(window).width();
+
+// once page loaded
+$(window).on("load",function(){
+	console.log('DUF Property Preview renderer v'+$('meta[name=renderer-version]').attr("content")+' loaded '+(Date.now()-timerStart)+"ms using identifier: "+c.ID)
+	console.log('config:')
+	console.dir(c)
+
+	// SET VIEW HEIGHT
+	$(".view").height(height - $('.navbar').outerHeight()).show()
+	.scroll(); // fix init on discount menu item bug
+
+	// SCROLL TO MENU ITEMS
+	// SE USER CASEY: https://stackoverflow.com/questions/8711333/bootstrap-js-scrollspy-with-animated-scroll
+	$(function() {
+	    $('#nav-main').bind('click', 'ul li a', function(event) {
+	        $('.view').scrollTo(event.target.hash, 0);
+	    });
+	});
+
+	map.invalidateSize() // fix map init render issue with bootstrap
+});
+</script>
+</body>
+</html>

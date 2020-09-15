@@ -1,0 +1,106 @@
+.original-ref,.area-viz-label {
+    height: 50px;
+    font-size: 80%;
+    line-height: 50px;
+    transition: all 0.15s linear;
+	color:#444;
+
+}
+.area-viz-edited-segment-wrapper div:first-child,
+.original-ref {
+  border-top-left-radius:.5rem;
+  border-bottom-left-radius: .5rem
+}
+.area-viz-edited-segment-wrapper div:last-child,
+.original-ref {
+  border-top-right-radius: .5rem;
+  border-bottom-right-radius: .5rem
+}
+.original-ref {
+	background: #ccc;
+	overflow-y: hidden;
+	overflow-x: hidden;
+    margin-bottom: 4px;
+}
+.original-ref span {margin-left:6px}
+.original-ref span > span {margin-left:0px}
+.area-viz:hover .original-ref {opacity:0.2}
+.area-viz-edited-segment-wrapper {
+	height:50px;
+	overflow-x:hidden;
+	overflow-y:hidden
+}
+.area-viz-edited-segment-wrapper > div {
+	border-collapse: collapse;
+	display: inline-block;
+	box-sizing: border-box;
+	transition: all 0.15s linear;
+	cursor: pointer;
+	border: 0px solid #162060;
+	opacity: 0.6;
+}
+.area-viz-edited-segment-wrapper div:hover,
+.area-viz-edited-segment-wrapper div.selected {
+  opacity:1
+}
+#viz-info {
+	text-align:left !important;
+	color:#162060;
+	padding-top: 14px;
+}
+.area-viz .select-helptext {
+	color: #669;
+	padding-right: 2px;
+	text-align: right;
+	font-style: italic;
+	font-size: 12px;
+	line-height: 1.6em
+}
+.area-viz-edited-segment-wrapper:hover .selected {opacity: 0.4}
+.area-viz-label {
+	clear:both;
+	margin-bottom: -50px;
+	position:relative;
+	z-index:99;
+	color: #669;
+	opacity:1;
+	padding-left:6px;
+	text-shadow: 	 3px  3px 3px #fff,
+					-3px  3px 3px #fff,
+					 3px -3px 3px #fff,
+					-3px -3px 3px #fff;
+}
+.axis-label-wrap{height:16px}
+.axis-label {
+	font-size: 12px;
+	line-height: 16px;
+	color: #6c757d;
+	clear:left;
+	text-align: center;
+	white-space: nowrap;
+}
+.percent-tick-wrap {
+	height: 25px;
+}
+.percent-tick {
+	line-height: 16px;
+	font-size: 10px;
+	color: #6c757d;
+	border-bottom: 1px solid #6c757d;
+	border-right: 1px solid #6c757d;
+	text-align: right;
+	padding-right: 4px;
+	width: 25%;
+	float:left;
+	box-sizing: border-box;
+}
+.first {
+	border-left: 1px solid #6c757d;
+}
+.area-viz-edited-segment-wrapper .selected:hover {opacity:1}
+.diff-indicator {
+    color:#666;
+    float:right;
+    opacity:0;
+    background: rgba(255,255,255,0.3)
+}

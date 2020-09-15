@@ -1,0 +1,254 @@
+<div class="prototype-active" id="scm">
+<form action="" class="form-active form-new-scm form-tank">
+<input type="hidden" name="scm-id" />
+<input type="hidden" name="type" value="tank" />
+
+<div class="card discount-table">
+	<div class="card-header">
+		<span class="title" name="title">Rainwater tank</span>&nbsp;
+		<i class="fa fa-map-marker indicator-point-placed" style="display:none" title="Click to show point on map"></i>
+		<div style="float:right;color:white">
+			<i class="fa fa-warning" name="indicator" style="display: none"></i>
+			<i class="fa fa-trash" name="deletescm" onclick="deletescm(this)" style="display: none"></i>
+		</div>
+	</div>
+	<ul class="list-group list-group-flush">
+		<li class="list-group-item">
+			<h6>Location of tank</h6>
+			<input type="text" readonly="readonly" name="point-latlng" required />
+			<input type="hidden" name="point-lat" />
+			<input type="hidden" name="point-lng" />
+			<!--<i class="fa fa-map-marker"></i> -->
+			<button class="btn btn-primary btn-sm" type="button" target="point-latlng" onclick="placePoint(this)">Place point on map</button>
+			<div class="error-message"></div>
+		</li>
+	</ul>
+	<div class="card-footer">
+		* Provided for illustrative purposes only
+		<input class="button commit-button" id="cancel-button" type="button" value="Cancel" onclick="cancelSCM(this)" />
+	    <input class="button commit-button" id="commit-button" type="button" value="Save" onclick="commitSCM()" />
+	    <input class="button edit-button" id="delete-button" type="button" value="Delete" onclick="deleteSCM(this)" style="display:none" />
+	    <input class="button edit-button" id="edit-button" type="button" value="Edit" onclick="editSCM(this)" style="display:none" />
+	</div>
+</div>
+
+<!--
+<table class="update-table discount-table" style="width:100%;text-align:left">
+	<thead>
+		<tr>
+			<th colspan="2">
+				<span class="title" name="title">Rainwater tank</span>&nbsp;
+				<i class="fa fa-map-marker indicator-point-placed" style="display:none" title="Click to show point on map"></i>
+				<div style="float:right;color:white">
+					<i class="fa fa-warning" name="indicator" style="display: none"></i>
+					<i class="fa fa-trash" name="deletescm" onclick="deletescm(this)" style="display: none"></i>
+				</div>
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<b>Location of tank</b>
+			</td>
+			<td>
+				<input type="text" readonly="readonly" name="point-latlng" required /><br>
+				<input type="hidden" name="point-lat" />
+				<input type="hidden" name="point-lng" />
+				<!--<i class="fa fa-map-marker"></i> --
+				<button type="button" target="point-latlng" onclick="placePoint(this)">Place point on map</button>
+				<div class="error-message"></div>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<b>Capacity</b><br>
+				Must be at least 30 gallons to be eligible.
+			</td>
+			<td>
+				<input type="text" step="1" name="capacity" onkeyup="evalCondition(this,'> 0');evalCondition(this,'> 250');evalCondition(this,'> 500')" min="30" required /> gallons
+				<!--<input type="range" min="30" max="10000" step="10" oninput="console.log($(this).val());$('[name=\'capacity\']').val($(this).val())">--
+			</td>
+		</tr>
+		<tr condition="capacity> 250" style="display:none">
+			<td>
+				<b>Impervious area drained</b>
+			</td>
+			<td>
+				<input class="attr" type="number" step="1" name="area-drained" onkeyup="deleteUserLayerTrigger(this)" min="0" required /> sq. ft. <br>
+				<!--<i class="fa fa-map-o"></i>-- <button type="button" id="measuremap" name="measuremap" target="area-drained" onclick="measureMap(this)" >Measure area on map</button>
+			</td>
+		</tr>
+		<tr condition="capacity> 0" style="display:none">
+			<td>
+				<b>What impervious cover drains to this tank?</b> *
+			</td>
+			<td>
+				<input class="attr" type="checkbox" name="ictype" value="roof" required/> Roof<br>
+				<input class="attr" type="checkbox" name="ictype" value="driveway" required/> Driveway<br>
+				<input class="attr" type="checkbox" name="ictype" value="patiodeck" required/> Patio/Deck<br>
+				<input class="attr" type="checkbox" name="ictype" value="street" required/> Street<br>
+				<input class="attr" type="checkbox" name="ictype" value="parking" required/> Parking<br>
+				<input class="attr" type="checkbox" name="ictype" value="other" required/> Other<br>	
+			</td>
+		</tr>
+		<tr condition="capacity> 0" style="display:none">
+			<td>
+				<b>Does this tank have an outflow device (spigot, hose, etc)?</b> *
+				<span condition="outflow== n" style="display: none; color: red">
+					Please note that all tanks must have an outflow device.
+				</span>
+			</td>
+			<td>
+				<input class="attr" type="radio" name="outflow" value="y" onclick="evalCondition(this,'== n')"/> Yes<br>
+				<input class="attr" type="radio" name="outflow" value="n" onclick="evalCondition(this,'== n')"/> No<br>
+			</td>
+		</tr>
+		<tr condition="capacity> 0" style="display:none">
+			<td>
+				<b>Does this tank have a screen at the inlet to prevent mosquito larvae?</b> *
+				<span condition="screen== n" style="display: none; color: red">
+					Please note that all tanks must have an inlet screen.
+				</span>
+			</td>
+			<td>
+				<input class="attr" type="radio" name="screen" value="y" onclick="evalCondition(this,'== n')"/> Yes<br>
+				<input class="attr" type="radio" name="screen" value="n" onclick="evalCondition(this,'== n')"/> No<br>
+			</td>
+		</tr>
+		<tr condition="capacity> 500" style="display:none">
+			<td>
+				<b>Have you installed a back flow prevention device as required by the Plumbing Code for the City of Austin for tanks holding more than 500 gallons?</b> *
+			</td>
+			<td>
+				<input class="attr" type="radio" name="backflow" value="y"/> Yes<br>
+				<input class="attr" type="radio" name="backflow" value="n"/> No<br>
+			</td>
+		</tr>
+		<tr condition="capacity> 0" style="display:none">
+			<td>
+				<b>Commercial properties only: Was the tank part of a site development plan or development agreement for the property?</b> *
+			</td>
+			<td>
+				<input class="attr" type="radio" name="plan" value="y"/> Yes<br>
+				<input class="attr" type="radio" name="plan" value="n"/> No<br>
+				<input class="attr" type="radio" name="plan" value="na"/> N/A<br>
+			</td>
+		</tr>
+		<!--<tr>
+			<td colspan="2"><b>Required attachments</b></td>
+		</tr>
+		<tr>
+			<td>
+				Photo(s) of this tank<br>
+				Must show connection to downspout AND that it has an outflow device (hose, spigot, etc.).
+			</td>
+			<td>
+				<input type="file" name="photo" multiple />
+			</td>
+		</tr>--
+
+		<tr class="form-actions">
+			<td style="text-align: left">
+				* Provided for illustrative purposes only
+			</td>
+			<td>
+				<input class="button commit-button" id="cancel-button" type="button" value="Cancel" onclick="cancelSCM(this)" />
+			    <input class="button commit-button" id="commit-button" type="button" value="Save" onclick="commitSCM()" />
+			    <input class="button edit-button" id="delete-button" type="button" value="Delete" onclick="deleteSCM(this)" style="display:none" />
+			    <input class="button edit-button" id="edit-button" type="button" value="Edit" onclick="editSCM(this)" style="display:none" />
+			</td>
+		</tr>
+
+<!--Required Attachments for Rain Harvesting Systems
+
+To upload photos, click the “Choose File” button, select the images you’d like to upload, and be sure to click “Open”. You should see the names of the attached images beside the “Choose File” button once complete.
+Photo(s) showing each tank. Photo must show connection to downspout AND that it has an outflow device (hose, spigot, etc.)
+No File Chosen
+Do you have additional photos or site maps to upload?*
+Yes
+No
+
+
+Rain Barrel/Cistern Maintenance Plan
+
+
+Rainwater harvesting equipment must be maintained in accordance with maintenance guidelines (Stormwater Management Discount Guidance Manual, p. 52
+I agree to maintain tanks and equipment by following the maintenance guidelines.*
+Yes
+Do you have any additional information that you would like to share?
+Optional: Do you give permission for the City of Austin to use your photo(s) for promoting the Stormwater Management Discount or other initiatives?*
+Yes
+No--
+
+		
+	</tbody>
+</table>-->
+</form>
+
+<style>
+	.discount-table {margin: 20px 0; border: 1px solid #03256a;}
+	.discount-table td, .discount-table th {text-align: left; padding: 4px 8px;vertical-align: top}
+	.discount-table td {background:#fff}
+	.discount-table td:first-child {width:50%}
+	.discount-table .form-actions td {text-align: right; background:#c4eef3;border:none; vertical-align: middle}
+	.discount-table .title {
+		font-size: 16px
+	}
+	input.error {border-color: 2px solid red}
+	label.error {float:right; color: red;}
+	.discount-table .button {
+		background: #03256a;
+		color: white;
+		padding: 4px 10px;
+		font-size: 12px;
+		font-weight: 400;
+		border-radius: 50px;
+		border: 0px solid #03256a;
+		cursor: pointer;
+		transition: 0.15s linear all;
+	}
+	.discount-table .button:hover {
+		background: #0f6486;
+		border-color: #0f6486;
+	}
+	.discount-table .button#delete-button,
+	.discount-table .button#cancel-button {
+		background: none;
+		border-color: #dd2b2b;
+		color: #dd2b2b;
+		/*color: #03256a*/
+	}
+	.discount-table .button#edit-button {
+		background: none;
+		color: #03256a;
+	}
+	.discount-table .button#delete-button:hover,
+	.discount-table .button#cancel-button:hover {
+		/*background: #b2d8dd*/
+		background: rgba(255, 0, 0, 0.15)
+	}
+	.discount-table .button#edit-button:hover {
+		background: rgba(3, 38, 108, 0.15);
+	}
+	.discount-table .button:disabled {
+		opacity: 0.5;
+		cursor: default;
+		color: #666 !important;
+	}
+	.discount-table .button:disabled:hover {
+		color: #666 !important;
+	}
+	.discount-table .button#commit-button:disabled {
+		background: #999 !important;
+	}
+	.discount-table .button#commit-button:disabled:hover {
+		background: #999 !important;
+	}
+	.discount-table .button#cancel-button:disabled:hover,
+	.discount-table .button#edit-button:disabled:hover,
+	.discount-table .button#delete-button:disabled:hover {
+		background: none !important;
+	}
+</style>
+</div>
